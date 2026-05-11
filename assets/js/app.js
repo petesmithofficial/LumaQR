@@ -204,11 +204,15 @@
       return;
     }
 
+    const previousMode = currentMode;
     currentMode = mode;
     const config = INPUT_MODES[mode];
     elements.payload.placeholder = config.placeholder;
     elements.payload.inputMode = config.inputMode;
     elements.payload.spellcheck = config.spellcheck;
+    if (previousMode === "url" && mode === "text") {
+      elements.payload.value = decodeUrlSpaces(elements.payload.value);
+    }
 
     for (const button of elements.modeButtons) {
       const isActive = button.dataset.mode === mode;
@@ -217,6 +221,10 @@
     }
 
     scheduleRender();
+  }
+
+  function decodeUrlSpaces(value) {
+    return value.replace(/%20/gi, " ");
   }
 
   elements.payload.addEventListener("input", scheduleRender);

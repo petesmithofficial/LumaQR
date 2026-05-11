@@ -191,6 +191,7 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  min-height: 48px;
   gap: 16px;
 }
 
@@ -343,6 +344,10 @@ textarea:focus {
     22% calc(100% - 2px),
     22% 100%
   );
+}
+
+.qr-stage.has-code::before {
+  opacity: 0;
 }
 
 .qr-stage::after {

@@ -211,7 +211,7 @@
     elements.payload.inputMode = config.inputMode;
     elements.payload.spellcheck = config.spellcheck;
     if (previousMode === "url" && mode === "text") {
-      elements.payload.value = decodeUrlSpaces(elements.payload.value);
+      elements.payload.value = decodeUrlPayload(elements.payload.value);
     }
 
     for (const button of elements.modeButtons) {
@@ -223,8 +223,14 @@
     scheduleRender();
   }
 
-  function decodeUrlSpaces(value) {
-    return value.replace(/%20/gi, " ");
+  function decodeUrlPayload(value) {
+    try {
+      return decodeURI(value);
+    } catch (error) {
+      return value.replace(/%([0-9a-fA-F]{2})/g, (match, hex) => {
+        return String.fromCharCode(parseInt(hex, 16));
+      });
+    }
   }
 
   elements.payload.addEventListener("input", scheduleRender);

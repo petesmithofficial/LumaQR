@@ -1,0 +1,30 @@
+# Luma QR
+
+A zero-dependency, front-end-only QR code generator.
+
+## Features
+
+- Live QR updates as text changes, with no generate button.
+- Automatic QR version sizing based on UTF-8 byte length.
+- Auto error-correction selection that keeps the QR compact while preserving scan reliability.
+- One-click PNG export.
+- Responsive app layout for phones, tablets, and desktop screens.
+- Runs as plain static files with no framework, build step, CDN, or runtime dependency.
+
+## Run locally
+
+Open `index.html` directly in a browser, or serve the folder:
+
+```sh
+python3 -m http.server 8080
+```
+
+Then open `http://127.0.0.1:8080`.
+
+## Verify
+
+```sh
+node scripts/verify.js
+```
+
+The verification script loads the QR engine, checks version scaling across representative payloads, and validates generated matrices/SVG output.

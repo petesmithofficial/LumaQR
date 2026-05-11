@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <meta
+      name="description"
+      content="A fast QR code generator with live updates and one-click PNG download."
+    >
+    <title>Luma QR</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar" aria-label="Application header">
+        <div>
+          <h1>Luma QR</h1>
+          <p>Turn any text into a scan-ready code.</p>
+        </div>
+      </header>
+
+      <section class="workspace" aria-label="QR generator workspace">
+        <section class="input-panel" aria-labelledby="payloadLabel">
+          <div class="panel-heading">
+            <div>
+              <h2 id="payloadLabel">Text or URL</h2>
+            </div>
+          </div>
+
+          <textarea
+            id="payload"
+            spellcheck="false"
+            autocomplete="off"
+            autocapitalize="off"
+            placeholder="https://example.com"
+            aria-labelledby="payloadLabel"
+          ></textarea>
+
+          <output id="capacityState" class="status-message" aria-live="polite" hidden></output>
+        </section>
+
+        <section class="output-panel" aria-label="QR output">
+          <div class="panel-heading">
+            <div>
+              <h2 id="qrLabel">QR code</h2>
+            </div>
+          </div>
+
+          <div class="qr-stage" id="qrStage">
+            <canvas id="qrCanvas" width="1" height="1" aria-label="Generated QR code"></canvas>
+            <div class="empty-state" id="emptyState">
+              <span>Standby</span>
+            </div>
+          </div>
+
+          <div class="export-row">
+            <button class="download-button" id="downloadButton" type="button" disabled>
+              Download PNG
+            </button>
+          </div>
+        </section>
+      </section>
+
+      <footer class="site-footer">
+        <span>Useful?</span>
+        <a href="https://buymeacoffee.com/petesmith" target="_blank" rel="noopener">Support this tool</a>
+      </footer>
+    </main>
+
+    <script src="assets/js/qr-engine.js"></script>
+    <script src="assets/js/app.js"></script>
+  </body>
+</html>

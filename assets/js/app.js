@@ -12,8 +12,11 @@
 
   const PREVIEW_QUIET_ZONE = 4;
   const EXPORT_TARGET_PX = 2048;
+  const MAX_INPUT_CHARS = QrEngine.internals.getByteCapacity(40, "L");
   let currentQr = null;
   let renderFrame = 0;
+
+  elements.payload.maxLength = MAX_INPUT_CHARS;
 
   function scheduleRender() {
     cancelAnimationFrame(renderFrame);
@@ -21,7 +24,8 @@
   }
 
   function render() {
-    const value = elements.payload.value;
+    const inputState = enforceInputLimit();
+    const value = inputState.value;
 
     if (value.length === 0) {
       currentQr = null;
@@ -32,20 +36,34 @@
     try {
       currentQr = QrEngine.encode(value, { errorLevel: "AUTO" });
       drawQrToCanvas(currentQr, elements.canvas, getPreviewPixelSize(currentQr));
-      updateQrStats();
+      updateQrStats(inputState.detail);
     } catch (error) {
       currentQr = null;
       clearQr("Too much content", error.message || "Payload is too large", true);
     }
   }
 
-  function updateQrStats() {
+  function enforceInputLimit() {
+    const value = elements.payload.value;
+    if (value.length <= MAX_INPUT_CHARS) {
+      return { value, detail: "" };
+    }
+
+    const truncated = value.slice(0, MAX_INPUT_CHARS);
+    elements.payload.value = truncated;
+    return {
+      value: truncated,
+      detail: `Input capped at ${MAX_INPUT_CHARS.toLocaleString()} characters.`,
+    };
+  }
+
+  function updateQrStats(detail = "") {
     elements.qrStage.classList.add("has-code");
     elements.downloadButton.disabled = false;
     elements.emptyState.querySelector("span").textContent = "Standby";
     elements.capacityState.classList.remove("is-error");
-    elements.capacityState.textContent = "";
-    elements.capacityState.hidden = true;
+    elements.capacityState.textContent = detail;
+    elements.capacityState.hidden = !detail;
   }
 
   function clearQr(label, detail = "", isError = false) {
@@ -97,8 +115,9 @@
       return;
     }
 
+    const qr = currentQr;
     const canvas = document.createElement("canvas");
-    drawQrToCanvas(currentQr, canvas, EXPORT_TARGET_PX);
+    drawQrToCanvas(qr, canvas, EXPORT_TARGET_PX);
     canvas.toBlob((blob) => {
       if (!blob) {
         return;
@@ -107,7 +126,7 @@
       const link = document.createElement("a");
       const url = URL.createObjectURL(blob);
       link.href = url;
-      link.download = makeFileName(currentQr.text);
+      link.download = makeFileName(qr.text);
       document.body.appendChild(link);
       link.click();
       link.remove();

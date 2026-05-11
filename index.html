@@ -33,8 +33,10 @@
             spellcheck="false"
             autocomplete="off"
             autocapitalize="off"
+            maxlength="2953"
             placeholder="https://example.com"
             aria-labelledby="payloadLabel"
+            aria-describedby="capacityState"
           ></textarea>
 
           <output id="capacityState" class="status-message" aria-live="polite" hidden></output>
@@ -64,7 +66,10 @@
 
       <footer class="site-footer">
         <span>Useful?</span>
-        <a href="https://buymeacoffee.com/petesmith" target="_blank" rel="noopener">Buy me a coffee</a>
+        <nav class="footer-links" aria-label="Project links">
+          <a href="https://github.com/petesmithofficial/LumaQR" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://buymeacoffee.com/petesmith" target="_blank" rel="noopener">Buy me a coffee</a>
+        </nav>
       </footer>
     </main>
 

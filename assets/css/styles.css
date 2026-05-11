@@ -485,28 +485,6 @@ canvas {
   text-shadow: 0 0 14px rgba(198, 255, 61, 0.28);
 }
 
-.footer-links .support-link {
-  min-height: 32px;
-  padding: 6px 13px;
-  color: var(--ink);
-  font-weight: 900;
-  background: var(--lime);
-  border: 0;
-  border-radius: var(--radius);
-  box-shadow:
-    0 0 14px rgba(198, 255, 61, 0.26),
-    0 0 24px rgba(49, 247, 255, 0.1);
-}
-
-.footer-links .support-link:hover {
-  color: var(--ink);
-  background: var(--cyan);
-  text-shadow: none;
-  box-shadow:
-    0 0 18px rgba(49, 247, 255, 0.34),
-    0 0 30px rgba(255, 43, 214, 0.14);
-}
-
 .is-error {
   color: var(--alert);
 }

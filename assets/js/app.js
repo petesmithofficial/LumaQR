@@ -8,12 +8,29 @@
     canvas: document.getElementById("qrCanvas"),
     emptyState: document.getElementById("emptyState"),
     downloadButton: document.getElementById("downloadButton"),
+    modeButtons: Array.from(document.querySelectorAll("[data-mode]")),
   };
 
   const PREVIEW_QUIET_ZONE = 4;
   const EXPORT_TARGET_PX = 2048;
+  const MAX_INPUT_CHARS = QrEngine.internals.getByteCapacity(40, "L");
+  const INPUT_MODES = {
+    url: {
+      placeholder: "https://example.com",
+      inputMode: "url",
+      spellcheck: false,
+    },
+    text: {
+      placeholder: "Type any text",
+      inputMode: "text",
+      spellcheck: true,
+    },
+  };
   let currentQr = null;
+  let currentMode = "url";
   let renderFrame = 0;
+
+  elements.payload.maxLength = MAX_INPUT_CHARS;
 
   function scheduleRender() {
     cancelAnimationFrame(renderFrame);
@@ -21,7 +38,9 @@
   }
 
   function render() {
-    const value = elements.payload.value;
+    const inputState = enforceInputLimit();
+    const payloadState = preparePayload(inputState.value);
+    const value = payloadState.value;
 
     if (value.length === 0) {
       currentQr = null;
@@ -32,20 +51,73 @@
     try {
       currentQr = QrEngine.encode(value, { errorLevel: "AUTO" });
       drawQrToCanvas(currentQr, elements.canvas, getPreviewPixelSize(currentQr));
-      updateQrStats();
+      updateQrStats(inputState.detail || payloadState.detail);
     } catch (error) {
       currentQr = null;
       clearQr("Too much content", error.message || "Payload is too large", true);
     }
   }
 
-  function updateQrStats() {
+  function enforceInputLimit() {
+    const value = elements.payload.value;
+    if (value.length <= MAX_INPUT_CHARS) {
+      return { value, detail: "" };
+    }
+
+    const truncated = value.slice(0, MAX_INPUT_CHARS);
+    elements.payload.value = truncated;
+    return {
+      value: truncated,
+      detail: `Input capped at ${MAX_INPUT_CHARS.toLocaleString()} characters.`,
+    };
+  }
+
+  function preparePayload(value) {
+    if (currentMode !== "url") {
+      return { value, detail: "" };
+    }
+
+    const encoded = encodeUrlPayload(value);
+    if (encoded !== value) {
+      elements.payload.value = encoded;
+    }
+
+    return { value: encoded, detail: "" };
+  }
+
+  function encodeUrlPayload(value) {
+    const compacted = value.trim().replace(/\s+/g, "%20");
+    if (!compacted) {
+      return "";
+    }
+
+    const preservedEscapes = [];
+    const protectedValue = compacted.replace(/%[0-9a-fA-F]{2}/g, (match) => {
+      const token = `__QRHEX${preservedEscapes.length}__`;
+      preservedEscapes.push(match.toUpperCase());
+      return token;
+    });
+
+    return safeEncodeUri(protectedValue).replace(/__QRHEX(\d+)__/g, (match, index) => {
+      return preservedEscapes[Number(index)] || match;
+    });
+  }
+
+  function safeEncodeUri(value) {
+    try {
+      return encodeURI(value);
+    } catch (error) {
+      return value.replace(/%(?![0-9a-fA-F]{2})/g, "%25");
+    }
+  }
+
+  function updateQrStats(detail = "") {
     elements.qrStage.classList.add("has-code");
     elements.downloadButton.disabled = false;
     elements.emptyState.querySelector("span").textContent = "Standby";
     elements.capacityState.classList.remove("is-error");
-    elements.capacityState.textContent = "";
-    elements.capacityState.hidden = true;
+    elements.capacityState.textContent = detail;
+    elements.capacityState.hidden = !detail;
   }
 
   function clearQr(label, detail = "", isError = false) {
@@ -97,8 +169,9 @@
       return;
     }
 
+    const qr = currentQr;
     const canvas = document.createElement("canvas");
-    drawQrToCanvas(currentQr, canvas, EXPORT_TARGET_PX);
+    drawQrToCanvas(qr, canvas, EXPORT_TARGET_PX);
     canvas.toBlob((blob) => {
       if (!blob) {
         return;
@@ -107,7 +180,7 @@
       const link = document.createElement("a");
       const url = URL.createObjectURL(blob);
       link.href = url;
-      link.download = makeFileName(currentQr.text);
+      link.download = makeFileName(qr.text);
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -126,9 +199,47 @@
     return `qr-${suffix}.png`;
   }
 
+  function setMode(mode) {
+    if (!INPUT_MODES[mode]) {
+      return;
+    }
+
+    const previousMode = currentMode;
+    currentMode = mode;
+    const config = INPUT_MODES[mode];
+    elements.payload.placeholder = config.placeholder;
+    elements.payload.inputMode = config.inputMode;
+    elements.payload.spellcheck = config.spellcheck;
+    if (previousMode === "url" && mode === "text") {
+      elements.payload.value = decodeUrlPayload(elements.payload.value);
+    }
+
+    for (const button of elements.modeButtons) {
+      const isActive = button.dataset.mode === mode;
+      button.classList.toggle("is-active", isActive);
+      button.setAttribute("aria-pressed", String(isActive));
+    }
+
+    scheduleRender();
+  }
+
+  function decodeUrlPayload(value) {
+    try {
+      return decodeURI(value);
+    } catch (error) {
+      return value.replace(/%([0-9a-fA-F]{2})/g, (match, hex) => {
+        return String.fromCharCode(parseInt(hex, 16));
+      });
+    }
+  }
+
   elements.payload.addEventListener("input", scheduleRender);
   elements.downloadButton.addEventListener("click", downloadCurrentQr);
+  for (const button of elements.modeButtons) {
+    button.addEventListener("click", () => setMode(button.dataset.mode));
+  }
   window.addEventListener("resize", scheduleRender);
 
+  setMode(currentMode);
   scheduleRender();
 })();

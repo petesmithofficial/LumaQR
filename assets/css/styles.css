@@ -193,6 +193,52 @@ h2 {
   gap: 16px;
 }
 
+.mode-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-width: min(100%, 230px);
+  padding: 4px;
+  background: rgba(1, 5, 12, 0.72);
+  border: 1px solid rgba(49, 247, 255, 0.26);
+  border-radius: var(--radius);
+  box-shadow:
+    0 0 0 1px rgba(255, 43, 214, 0.1) inset,
+    0 0 24px rgba(49, 247, 255, 0.08);
+}
+
+.mode-button {
+  min-height: 38px;
+  padding: 0 14px;
+  color: var(--muted);
+  font-weight: 850;
+  white-space: nowrap;
+  background: transparent;
+  border: 0;
+  border-radius: calc(var(--radius) - 3px);
+  cursor: pointer;
+  transition:
+    color 150ms ease,
+    background 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease;
+}
+
+.mode-button:hover {
+  color: var(--text);
+}
+
+.mode-button.is-active {
+  color: var(--ink);
+  background: var(--lime);
+  box-shadow:
+    0 0 16px rgba(198, 255, 61, 0.28),
+    0 0 28px rgba(49, 247, 255, 0.12);
+}
+
+.mode-button.is-active:hover {
+  transform: translateY(-1px);
+}
+
 textarea {
   width: 100%;
   min-height: 100%;
@@ -399,24 +445,35 @@ canvas {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  flex-wrap: wrap;
+  gap: 8px 12px;
   padding: 18px 0 0;
   color: rgba(147, 164, 184, 0.72);
   font-size: 0.86rem;
 }
 
-.site-footer a {
+.footer-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+
+.footer-links a {
   color: rgba(244, 251, 255, 0.82);
   text-decoration: none;
   border-bottom: 1px solid rgba(49, 247, 255, 0.26);
   transition:
     border-color 150ms ease,
-    color 150ms ease;
+    color 150ms ease,
+    text-shadow 150ms ease;
 }
 
-.site-footer a:hover {
+.footer-links a:hover {
   color: var(--lime);
   border-color: rgba(198, 255, 61, 0.65);
+  text-shadow: 0 0 14px rgba(198, 255, 61, 0.28);
 }
 
 .is-error {
@@ -467,9 +524,18 @@ canvas {
     padding-top: 12px;
   }
 
+  .footer-links {
+    gap: 6px 12px;
+  }
+
   .panel-heading {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .mode-toggle {
+    width: 100%;
+    min-width: 0;
   }
 
   textarea {

@@ -4,12 +4,14 @@ A zero-dependency, front-end-only QR code generator.
 
 ## Features
 
-- Live QR updates as text changes, with no generate button.
+- Live QR updates as URL or free text changes, with no generate button.
+- URL mode trims extra edge whitespace and percent-encodes URL spaces.
 - Automatic QR version sizing based on UTF-8 byte length.
 - Auto error-correction selection that keeps the QR compact while preserving scan reliability.
 - One-click PNG export.
 - Responsive app layout for phones, tablets, and desktop screens.
 - Runs as plain static files with no framework, build step, CDN, or runtime dependency.
+- Keeps QR payloads local to the browser; no text is sent to a server.
 
 ## Run locally
 
@@ -35,6 +37,12 @@ The repository includes `wrangler.jsonc` for Cloudflare Workers Static Assets.
 
 In Cloudflare Workers Builds, use:
 
-- Build command: `mkdir -p dist && cp index.html dist/ && cp -R assets dist/assets`
+- Build command: `node scripts/verify.js && rm -rf dist && mkdir -p dist && cp index.html dist/ && cp -R assets dist/`
 - Deploy command: `npx wrangler deploy`
 - Production branch: `main`
+
+## License
+
+Luma QR is available under the MIT License. See `LICENSE`.
+
+If this tool saves you time, support is welcome at <https://buymeacoffee.com/petesmith>.

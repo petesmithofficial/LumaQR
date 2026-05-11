@@ -28,3 +28,13 @@ node scripts/verify.js
 ```
 
 The verification script loads the QR engine, checks version scaling across representative payloads, and validates generated matrices/SVG output.
+
+## Deploy on Cloudflare Workers
+
+The repository includes `wrangler.jsonc` for Cloudflare Workers Static Assets.
+
+In Cloudflare Workers Builds, use:
+
+- Build command: `mkdir -p dist && cp index.html dist/ && cp -R assets dist/assets`
+- Deploy command: `npx wrangler deploy`
+- Production branch: `main`

@@ -1,0 +1,26 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" rx="88" fill="#05070d"/>
+  <path d="M64 96C64 78.327 78.327 64 96 64H416C433.673 64 448 78.327 448 96V416C448 433.673 433.673 448 416 448H96C78.327 448 64 433.673 64 416V96Z" fill="#08111f"/>
+  <path d="M96 96H416V416H96V96Z" stroke="#31f7ff" stroke-opacity=".22" stroke-width="4"/>
+  <g fill="#f4fbff">
+    <path d="M120 120H212V212H120V120Z"/>
+    <path d="M300 120H392V212H300V120Z"/>
+    <path d="M120 300H212V392H120V300Z"/>
+  </g>
+  <g fill="#05070d">
+    <path d="M144 144H188V188H144V144Z"/>
+    <path d="M324 144H368V188H324V144Z"/>
+    <path d="M144 324H188V368H144V324Z"/>
+  </g>
+  <g fill="#31f7ff">
+    <path d="M248 120H272V272H248V120Z"/>
+    <path d="M248 248H392V272H248V248Z"/>
+    <path d="M368 248H392V392H368V248Z"/>
+  </g>
+  <g fill="#c6ff3d">
+    <path d="M248 368H320V392H248V368Z"/>
+    <path d="M300 300H344V344H300V300Z"/>
+    <path d="M232 300H272V344H232V300Z"/>
+  </g>
+  <path d="M96 96H168V112H112V168H96V96ZM344 96H416V168H400V112H344V96ZM96 344H112V400H168V416H96V344ZM400 344H416V416H344V400H400V344Z" fill="#ff2bd6"/>
+</svg>

@@ -13,7 +13,8 @@
   --paper: #ffffff;
   --ink: #05070d;
   --radius: 8px;
-  --surface-size: clamp(360px, 34vw, 540px);
+  --qr-stage-padding: clamp(18px, 4vw, 30px);
+  --surface-size: clamp(280px, min(28vw, 42svh), 390px);
   font-family:
     Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
@@ -75,18 +76,17 @@ textarea {
 }
 
 .app-shell {
-  width: min(1160px, calc(100% - 40px));
-  min-height: 100svh;
+  width: min(1120px, calc(100% - 40px));
   margin: 0 auto;
-  padding: clamp(24px, 4vw, 54px) 0;
+  padding: clamp(18px, 3vw, 32px) 0 24px;
   display: grid;
-  grid-template-rows: auto auto 1fr auto;
-  gap: clamp(18px, 3vw, 30px);
+  grid-template-rows: auto auto auto;
+  gap: clamp(16px, 2.5vw, 24px);
 }
 
 .topbar {
   position: relative;
-  padding: 8px 0 20px;
+  padding: 6px 0 16px;
 }
 
 .topbar::after {
@@ -109,7 +109,7 @@ p {
 
 h1 {
   max-width: 760px;
-  font-size: clamp(3.2rem, 9vw, 8.8rem);
+  font-size: clamp(3rem, 8vw, 6.6rem);
   line-height: 0.82;
   font-weight: 900;
   text-transform: uppercase;
@@ -120,7 +120,7 @@ h1 {
 
 .topbar p {
   max-width: 520px;
-  margin-top: 14px;
+  margin-top: 10px;
   color: var(--muted);
   font-size: clamp(1rem, 2vw, 1.2rem);
   line-height: 1.45;
@@ -135,7 +135,7 @@ h2 {
 .workspace {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(340px, 0.92fr);
-  gap: clamp(16px, 2.6vw, 26px);
+  gap: clamp(16px, 2.3vw, 24px);
   align-items: start;
 }
 
@@ -173,14 +173,14 @@ h2 {
 }
 
 .input-panel {
-  padding: clamp(18px, 3vw, 30px);
+  padding: clamp(18px, 2.5vw, 24px);
   display: grid;
   grid-template-rows: auto var(--surface-size) auto;
   gap: 18px;
 }
 
 .output-panel {
-  padding: clamp(18px, 3vw, 30px);
+  padding: clamp(18px, 2.5vw, 24px);
   display: grid;
   grid-template-rows: auto var(--surface-size) auto;
   gap: 18px;
@@ -190,6 +190,7 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  min-height: 48px;
   gap: 16px;
 }
 
@@ -297,6 +298,7 @@ textarea:focus {
   min-height: 100%;
   height: 100%;
   aspect-ratio: unset;
+  padding: var(--qr-stage-padding);
   overflow: hidden;
   background: rgba(1, 5, 12, 0.88);
   border: 1px solid rgba(49, 247, 255, 0.26);
@@ -343,6 +345,10 @@ textarea:focus {
   );
 }
 
+.qr-stage.has-code::before {
+  opacity: 0;
+}
+
 .qr-stage::after {
   position: absolute;
   right: 0;
@@ -359,6 +365,8 @@ canvas {
   position: relative;
   z-index: 1;
   width: min(78%, calc(var(--surface-size) - 72px));
+  max-width: 100%;
+  max-height: 100%;
   height: auto;
   background: var(--paper);
   border-radius: 6px;
@@ -441,7 +449,6 @@ canvas {
 }
 
 .site-footer {
-  align-self: end;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -492,7 +499,7 @@ canvas {
 @media (max-width: 920px) {
   .app-shell {
     width: min(100% - 24px, 760px);
-    padding: 18px 0;
+    padding: 14px 0 18px;
   }
 
   .workspace {
@@ -500,11 +507,11 @@ canvas {
   }
 
   .input-panel {
-    grid-template-rows: auto minmax(190px, 32svh) auto;
+    grid-template-rows: auto minmax(140px, 22svh) auto;
   }
 
   .output-panel {
-    grid-template-rows: auto minmax(300px, 64vw) auto;
+    grid-template-rows: auto minmax(280px, 60vw) auto;
   }
 
   .qr-stage {
@@ -515,7 +522,7 @@ canvas {
 @media (max-width: 620px) {
   .app-shell {
     width: min(100% - 18px, 520px);
-    gap: 14px;
+    gap: 12px;
   }
 
   .site-footer {
@@ -539,12 +546,12 @@ canvas {
   }
 
   textarea {
-    min-height: 170px;
+    min-height: 130px;
     padding: 16px;
   }
 
   canvas {
-    width: 86%;
+    width: min(68vw, 240px);
   }
 
 }

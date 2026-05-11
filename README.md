@@ -4,7 +4,8 @@ A zero-dependency, front-end-only QR code generator.
 
 ## Features
 
-- Live QR updates as text changes, with no generate button.
+- Live QR updates as URL or free text changes, with no generate button.
+- URL mode trims extra edge whitespace and percent-encodes URL spaces.
 - Automatic QR version sizing based on UTF-8 byte length.
 - Auto error-correction selection that keeps the QR compact while preserving scan reliability.
 - One-click PNG export.
@@ -42,4 +43,6 @@ In Cloudflare Workers Builds, use:
 
 ## License
 
-Luma QR is available under the MIT License with an Attribution and Support Link Addendum. See `LICENSE`.
+Luma QR is available under the MIT License. See `LICENSE`.
+
+If this tool saves you time, support is welcome at <https://buymeacoffee.com/petesmith>.

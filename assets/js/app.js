@@ -8,12 +8,26 @@
     canvas: document.getElementById("qrCanvas"),
     emptyState: document.getElementById("emptyState"),
     downloadButton: document.getElementById("downloadButton"),
+    modeButtons: Array.from(document.querySelectorAll("[data-mode]")),
   };
 
   const PREVIEW_QUIET_ZONE = 4;
   const EXPORT_TARGET_PX = 2048;
   const MAX_INPUT_CHARS = QrEngine.internals.getByteCapacity(40, "L");
+  const INPUT_MODES = {
+    url: {
+      placeholder: "https://example.com",
+      inputMode: "url",
+      spellcheck: false,
+    },
+    text: {
+      placeholder: "Type any text",
+      inputMode: "text",
+      spellcheck: true,
+    },
+  };
   let currentQr = null;
+  let currentMode = "url";
   let renderFrame = 0;
 
   elements.payload.maxLength = MAX_INPUT_CHARS;
@@ -25,7 +39,8 @@
 
   function render() {
     const inputState = enforceInputLimit();
-    const value = inputState.value;
+    const payloadState = preparePayload(inputState.value);
+    const value = payloadState.value;
 
     if (value.length === 0) {
       currentQr = null;
@@ -36,7 +51,7 @@
     try {
       currentQr = QrEngine.encode(value, { errorLevel: "AUTO" });
       drawQrToCanvas(currentQr, elements.canvas, getPreviewPixelSize(currentQr));
-      updateQrStats(inputState.detail);
+      updateQrStats(inputState.detail || payloadState.detail);
     } catch (error) {
       currentQr = null;
       clearQr("Too much content", error.message || "Payload is too large", true);
@@ -55,6 +70,45 @@
       value: truncated,
       detail: `Input capped at ${MAX_INPUT_CHARS.toLocaleString()} characters.`,
     };
+  }
+
+  function preparePayload(value) {
+    if (currentMode !== "url") {
+      return { value, detail: "" };
+    }
+
+    const encoded = encodeUrlPayload(value);
+    if (encoded !== value) {
+      elements.payload.value = encoded;
+    }
+
+    return { value: encoded, detail: "" };
+  }
+
+  function encodeUrlPayload(value) {
+    const compacted = value.trim().replace(/\s+/g, "%20");
+    if (!compacted) {
+      return "";
+    }
+
+    const preservedEscapes = [];
+    const protectedValue = compacted.replace(/%[0-9a-fA-F]{2}/g, (match) => {
+      const token = `__QRHEX${preservedEscapes.length}__`;
+      preservedEscapes.push(match.toUpperCase());
+      return token;
+    });
+
+    return safeEncodeUri(protectedValue).replace(/__QRHEX(\d+)__/g, (match, index) => {
+      return preservedEscapes[Number(index)] || match;
+    });
+  }
+
+  function safeEncodeUri(value) {
+    try {
+      return encodeURI(value);
+    } catch (error) {
+      return value.replace(/%(?![0-9a-fA-F]{2})/g, "%25");
+    }
   }
 
   function updateQrStats(detail = "") {
@@ -145,9 +199,33 @@
     return `qr-${suffix}.png`;
   }
 
+  function setMode(mode) {
+    if (!INPUT_MODES[mode]) {
+      return;
+    }
+
+    currentMode = mode;
+    const config = INPUT_MODES[mode];
+    elements.payload.placeholder = config.placeholder;
+    elements.payload.inputMode = config.inputMode;
+    elements.payload.spellcheck = config.spellcheck;
+
+    for (const button of elements.modeButtons) {
+      const isActive = button.dataset.mode === mode;
+      button.classList.toggle("is-active", isActive);
+      button.setAttribute("aria-pressed", String(isActive));
+    }
+
+    scheduleRender();
+  }
+
   elements.payload.addEventListener("input", scheduleRender);
   elements.downloadButton.addEventListener("click", downloadCurrentQr);
+  for (const button of elements.modeButtons) {
+    button.addEventListener("click", () => setMode(button.dataset.mode));
+  }
   window.addEventListener("resize", scheduleRender);
 
+  setMode(currentMode);
   scheduleRender();
 })();

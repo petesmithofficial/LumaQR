@@ -1,4 +1,4 @@
-MIT License with Attribution and Support Link Addendum
+MIT License
 
 Copyright (c) 2026 Pete Smith
 
@@ -6,29 +6,11 @@ Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, subject to the conditions below.
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice must be included in all
+The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
-
-Attribution and Support Link Addendum:
-
-If you publish, host, distribute, or otherwise make publicly available any
-project, product, service, website, application, or derivative work that reuses
-any portion of this Software, you must include a clearly visible attribution
-and support link in the user-facing interface or public documentation.
-
-The attribution and support link must include:
-
-Luma QR by Pete Smith
-https://github.com/petesmithofficial/LumaQR
-https://buymeacoffee.com/petesmith
-
-The link must be reasonably accessible to end users or recipients. It must not
-be hidden only in source code, bundled files, minified output, or non-public
-metadata. Private/internal use, local development, and unmodified redistribution
-that preserves this LICENSE file and repository references do not require an
-additional user-facing support link.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,

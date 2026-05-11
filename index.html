@@ -16,7 +16,7 @@
       <header class="topbar" aria-label="Application header">
         <div>
           <h1>Luma QR</h1>
-          <p>Turn any text into a scan-ready code.</p>
+          <p>Create clean QR codes for links or plain text.</p>
         </div>
       </header>
 
@@ -24,7 +24,15 @@
         <section class="input-panel" aria-labelledby="payloadLabel">
           <div class="panel-heading">
             <div>
-              <h2 id="payloadLabel">Text or URL</h2>
+              <h2 id="payloadLabel">URL or Text</h2>
+            </div>
+            <div class="mode-toggle" role="group" aria-label="QR content type">
+              <button class="mode-button is-active" type="button" data-mode="url" aria-pressed="true">
+                URL
+              </button>
+              <button class="mode-button" type="button" data-mode="text" aria-pressed="false">
+                Free text
+              </button>
             </div>
           </div>
 
@@ -33,6 +41,7 @@
             spellcheck="false"
             autocomplete="off"
             autocapitalize="off"
+            inputmode="url"
             maxlength="2953"
             placeholder="https://example.com"
             aria-labelledby="payloadLabel"
